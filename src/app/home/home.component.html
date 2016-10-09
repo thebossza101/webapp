@@ -2,48 +2,54 @@
   <div class="card card-block" style="top: 20px;">
     <h4 class="card-title">Test App SMEMPL</h4>
 
-    <form class="form-inline m-x-auto">
-      <div class="form-group">
+      <div class="form-group m-x-auto">
         <div class="input-group">
-          <div class="input-group-addon">Search</div>
-          <input type="text" class="form-control" id="exampleInputAmount" placeholder="EMPCODE">
+          <input type="text" class="form-control" placeholder="Search for EMPCODE" [(ngModel)]="searchbarinput">
+          <span class="input-group-btn">
+        <button class="btn btn-secondary" type="button" (click)="buttonSearchclick()">Search</button>
+      </span>
         </div>
       </div>
-    </form>
     <div class="table-responsive">
       <table class="table table-striped table-bordered table-sm" style="margin-top: 16px;">
-  <thead>
-    <tr class="table-info">
-      <th>#</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Username</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>
+        <thead>
+          <tr class="table-info">
+            <th>#</th>
+            <th>LOCK</th>
+            <th>EMPCODE</th>
+            <th>EMPDESC</th>
+            <th>INACTIVE</th>
+            <th>CUSTCODE</th>
+            <th>VENDCODE</th>
+            <th>POSITION</th>
+            <th>CTCADR1</th>
+            <th>CTCADR2</th>
+            <th>EMAIL</th>
+            <th>GROUPID</th>
+            <th>PDF</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <th scope="row">{{item.RowNum}}</th>
+            <td>{{item.LOCK}}</td>
+            <td>{{item.EMPCODE}}</td>
+            <td>{{item.EMPDESC}}</td>
+            <td>{{item.INACTIVE}}</td>
+            <td>{{item.CUSTCODE}}</td>
+            <td>{{item.VENDCODE}}</td>
+            <td>{{item.POSITION}}</td>
+            <td>{{item.CTCADR1}}</td>
+            <td>{{item.CTCADR2}}</td>
+            <td>{{item.EMAIL}}</td>
+            <td>{{item.GROUPID}}</td>
+            <td>view</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  <div id="inner">
-    <ngb-pagination [collectionSize]="5" [(page)]="page"></ngb-pagination>
-  </div>
+    <div id="inner">
+      <ngb-pagination [(pageSize)]="RowspPage" [(collectionSize)]="totalrows" [(page)]="PageNumber" [maxSize]="5" [rotate]="true" [ellipses]="false"></ngb-pagination>
+    </div>
   </div>
 </div>
