@@ -4,11 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-import { HttpserviceService } from './shared/httpservice.service'
+import { HttpserviceService } from './shared/httpservice.service';
+import { GoogleService } from './shared/google.service';
+import { HomeService } from './shared/home.service';
 import { routing } from './app.routing';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './shared/header/header.component';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -24,7 +27,7 @@ import { HeaderComponent } from './shared/header/header.component';
     NgbModule,
     routing
   ],
-  providers: [HttpserviceService],
+  providers: [HttpserviceService,GoogleService,NgbModal],
   entryComponents: [AppComponent],
   bootstrap: [AppComponent]
 })

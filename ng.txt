@@ -1,0 +1,39 @@
+ng build --base-href /webapp/
+
+# Sets base tag href to /myUrl/ in your index.html
+ng build --base-href /myUrl/
+ng build --bh /myUrl/
+
+# these are equivalent
+ng build --target=production --environment=prod
+ng build --prod --env=prod
+ng build --prod
+# and so are these
+ng build --target=development --environment=dev
+ng build --dev --e=dev
+ng build --dev
+ng build
+
+ng generate component my-new-component
+ng g component my-new-component # using the alias
+
+# components support relative path generation
+# if in the directory src/app/feature/ and you run
+ng g component new-cmp
+# your component will be generated in src/app/feature/new-cmp
+# but if you were to run
+ng g component ../newer-cmp
+# your component will be generated in src/app/newer-cmp
+
+Component	ng g component my-new-component
+Directive	ng g directive my-new-directive
+Pipe	ng g pipe my-new-pipe
+Service	ng g service my-new-service
+Class	ng g class my-new-class
+Interface	ng g interface my-new-interface
+Enum	ng g enum my-new-enum
+Module	ng g module my-module
+
+npm install -g angular-cli
+
+ng --help
