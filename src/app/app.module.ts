@@ -11,7 +11,8 @@ import { routing } from './app.routing';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './shared/header/header.component';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {ConfirmModule} from 'angular2-bootstrap-confirm';
 
 
 @NgModule({
@@ -24,10 +25,11 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
     BrowserModule,
     FormsModule,
     HttpModule,
-    NgbModule,
-    routing
+    NgbModule.forRoot(),
+    routing,
+    ConfirmModule
   ],
-  providers: [HttpserviceService,GoogleService,NgbModal],
+  providers: [HttpserviceService,GoogleService,NgbActiveModal],
   entryComponents: [AppComponent],
   bootstrap: [AppComponent]
 })

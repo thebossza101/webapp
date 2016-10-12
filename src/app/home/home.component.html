@@ -2,7 +2,7 @@
   <div class="card card-block" style="top: 20px;">
     <h4 class="card-title">Test App SMEMPL</h4>
     <div class="form-inline">
-    <button class="btn btn-secondary" type="button" (click)="open(content,'A')">Add</button>  
+    <button class="btn btn-secondary" type="button" (click)="open(content,'A','')">Add</button>  
       <div class="form-group">  
         <div class="input-group"> 
           <input type="text" class="form-control" placeholder="Search for EMPCODE" [(ngModel)]="searchbarinput" (keyup.enter)="buttonSearchclick()">
@@ -17,6 +17,7 @@
         <thead>
           <tr class="">
             <th>#</th>
+            <th>Menu</th>
             <th>LOCK</th>
             <th>EMPCODE</th>
             <th>EMPDESC</th>
@@ -34,6 +35,24 @@
         <tbody>
           <tr *ngFor="let item of items">
             <th scope="row">{{item.RowNum}}</th>
+            <td>
+              <button (click)="open(content,'E',item)" type="button" class="btn btn-warning btn-sm">Edit</button>
+      <button
+            class="btn btn-danger btn-sm"
+            mwlConfirm
+            title="Are you sure?"
+            message="Are you really <b>sure</b> you want to delete {{item.EMPCODE}} ?"
+            confirmText="Yes"
+            cancelText="No"
+            placement="right"
+            (confirm)="delclick(item)"
+            confirmButtonType="danger"
+            cancelButtonType="default"
+            
+            [appendToBody]="true">
+            del
+          </button>
+            </td>
             <td>{{item.LOCK}}</td>
             <td>{{item.EMPCODE}}</td>
             <td>{{item.EMPDESC}}</td>

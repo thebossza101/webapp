@@ -5,17 +5,23 @@ import {
 
 import { HttpserviceService } from '../shared/httpservice.service';
 import { GoogleService } from '../shared/google.service';
-import {NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs/Subject';
+import {ConfirmOptions, Position} from 'angular2-bootstrap-confirm';
+import {Positioning} from '@ng-bootstrap/ng-bootstrap/util/positioning';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  providers:[ConfirmOptions,
+     // this is required so you can use the bundled position service rather than rely on the `@ng-bootstrap/ng-bootstrap` module
+    {provide: Position, useClass: Positioning}]
 })
 export class HomeComponent implements OnInit {
+
    private _success = new Subject<string>();
 
-  constructor(public httpserviceService: HttpserviceService,public googleService: GoogleService,private modalService: NgbModal) {}
+  constructor(public httpserviceService: HttpserviceService,public googleService: GoogleService,private modalService:NgbModal, public activeModal: NgbActiveModal) {}
   items: any;
   PageNumber = 1;
   totalrows = 0;
@@ -36,6 +42,7 @@ export class HomeComponent implements OnInit {
   CTCADR2: string
   EMAIL: string
   GROUPID:string
+  disabled_EMPCODE:boolean;
   ngOnInit() {
 this._success.subscribe((message) => this.ngbalerttext = message);
    this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
@@ -45,6 +52,7 @@ this._success.subscribe((message) => this.ngbalerttext = message);
   }
   buttonSearchclick() {
       let val = this.searchbarinput;
+      this.PageNumber = 1;
         if (val && val.trim() != '') {
          this.getonlinedata(this.searchbarinput, this.PageNumber, this.RowspPage);
 
@@ -80,6 +88,27 @@ this.googleService.handleAuthClick(CTCADR2).then((res)=>{
  //window.open(res[0]['webViewLink']);
 window.open (res[0]['webViewLink'], "_blank","status=1,toolbar=1");
 })
+
+
+  }
+  delclick(item){
+      this.delete_EMPCODE(item.EMPCODE).then((res)=>{
+    let val = this.searchbarinput;
+        if (val && val.trim() != '') {
+
+this.getonlinedata(this.searchbarinput, this.PageNumber, this.RowspPage)
+this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
+     this.initializeData  = data['data'];
+     this.initializetotalrows = data['totalrows'];
+   });
+        }else{
+this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
+     this.initializeData  = data['data'];
+     this.initializetotalrows = data['totalrows'];
+   });
+        }
+
+      })
 
 
   }
@@ -151,9 +180,14 @@ window.open (res[0]['webViewLink'], "_blank","status=1,toolbar=1");
           this.insert(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL, GROUPID).then(data=>{
             var msg = 'Add Successful';
              this._success.next(`Add Successful`);
-             this.ngbalerttext = null;
-            
-            
+            this.searchbarinput = EMPCODE;
+            this.PageNumber = 1;
+            this.getonlinedata(this.searchbarinput, this.PageNumber, this.RowspPage)
+            this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
+     this.initializeData  = data['data'];
+     this.initializetotalrows = data['totalrows'];
+   });
+
           },(er)=>{console.log(er)});
         }
       },(er)=>{console.log(er)})
@@ -161,16 +195,58 @@ window.open (res[0]['webViewLink'], "_blank","status=1,toolbar=1");
   }
   edit_data(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL){
 
-      var GROUPID = null;
+      var GROUPID = "";
       this.edit(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL, GROUPID).then(data=>{
         var msg = 'Edit Successful';
-  
+        this._success.next(`Edit Successful`);
+        let val = this.searchbarinput;
+        if (val && val.trim() != '') {
+
+this.getonlinedata(this.searchbarinput, this.PageNumber, this.RowspPage)
+this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
+     this.initializeData  = data['data'];
+     this.initializetotalrows = data['totalrows'];
+   });
+        }else{
+this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
+     this.initializeData  = data['data'];
+     this.initializetotalrows = data['totalrows'];
+   });
+        }
+
+
       },(er)=>{console.log(er)});
 
 
   }
-   open(content,mode) {
+  
+   open(content,mode,item) {
      this.mode = mode;
+     if(mode == 'A'){
+this.EMPCODE = "";
+ this.EMPDESC = "";
+  this.CUSTCODE = "";
+   this.VENDCODE = "";
+    this.POSITION = "";
+     this.CTCADR1 = "";
+      this.CTCADR2 = "";
+       this.EMAIL = "";
+        this.GROUPID = "";
+        this.ngbalerttext = null
+        this.disabled_EMPCODE = false;
+     }else{
+       this.EMPCODE = item.EMPCODE;
+ this.EMPDESC = item.EMPDESC;
+  this.CUSTCODE = item.CUSTCODE ;
+   this.VENDCODE = item.VENDCODE ;
+    this.POSITION = item.POSITION ;
+     this.CTCADR1 = item.CTCADR1 ;
+      this.CTCADR2 = item.CTCADR2 ;
+       this.EMAIL = item.EMAIL ;
+        this.GROUPID = item.GROUPID ;
+        this.ngbalerttext = null
+        this.disabled_EMPCODE = true;
+     }
     this.modalService.open(content).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -186,6 +262,7 @@ private getDismissReason(reason: any): string {
       return  `with: ${reason}`;
     }
   }
+  
 Saveclick(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL) {
     if (!EMPCODE) {
    this._success.next(`โปรดใส่ EMPCODE`);
