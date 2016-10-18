@@ -18,18 +18,18 @@
           <tr class="">
             <th>#</th>
             <th>Menu</th>
-            <th>LOCK</th>
-            <th>EMPCODE</th>
-            <th>EMPDESC</th>
-            <th>INACTIVE</th>
-            <th>CUSTCODE</th>
-            <th>VENDCODE</th>
-            <th>POSITION</th>
-            <th>CTCADR1</th>
-            <th>CTCADR2</th>
-            <th>EMAIL</th>
-            <th>GROUPID</th>
-            <th>PDF</th>
+            <th>REF</th>
+            <th>ATTN</th>
+            <th>DATE</th>
+            <th>FROM</th>
+            <th>TEL NUMBER</th>
+            <th>CC</th>
+            <th>FAX NUMBER</th>
+            <th>SHIPPER</th>
+            <th>QUANTITIES</th>
+            <th>FEEDER</th>
+            <th>VESSEL</th>
+           <!-- <th>PDF</th> -->
           </tr>
         </thead>
         <tbody>
@@ -41,7 +41,7 @@
             class="btn btn-danger btn-sm"
             mwlConfirm
             title="Are you sure?"
-            message="Are you really <b>sure</b> you want to delete {{item.EMPCODE}} ?"
+            message="Are you really <b>sure</b> you want to delete {{item.DOCNO}} ?"
             confirmText="Yes"
             cancelText="No"
             placement="right"
@@ -53,18 +53,18 @@
             del
           </button>
             </td>
-            <td>{{item.LOCK}}</td>
-            <td>{{item.EMPCODE}}</td>
-            <td>{{item.EMPDESC}}</td>
-            <td>{{item.INACTIVE}}</td>
-            <td>{{item.CUSTCODE}}</td>
-            <td>{{item.VENDCODE}}</td>
-            <td>{{item.POSITION}}</td>
-            <td>{{item.CTCADR1}}</td>
-            <td>{{item.CTCADR2}}</td>
-            <td>{{item.EMAIL}}</td>
-            <td>{{item.GROUPID}}</td>
-            <td><button type="button" class="btn btn-link" style="padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;" (click)="viewPDF(item.CTCADR2)">View</button></td>
+            <td>{{item.DOCNO}}</td>
+            <td>{{item.CTCNAME}}</td>
+            <td>{{item.DOCDATE}}</td>
+            <td>{{item.FROMNAME}}</td>
+            <td>{{item.TEL}}</td>
+            <td>{{item.CCNAME}}</td>
+            <td>{{item.OPTION1}}</td>
+            <td>{{item.SHIPPERNAME}}</td>
+            <td>{{item.CBM}}</td>
+            <td>{{item.FEEDER}}</td>
+            <td>{{item.VESSEL}}</td>
+            <!-- <td><button type="button" class="btn btn-link" style="padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;" (click)="viewPDF(item.CTCADR2)">View</button></td> -->
           </tr>
         </tbody>
       </table>
@@ -82,37 +82,121 @@
     <h4 class="modal-title">Add System</h4>
   </div>
   <div class="modal-body">
+
     <div class="form-group">
-    <label for="exampleInputEmail1">EMPCODE</label>
-    <input type="text" class="form-control"  placeholder="Enter EMPCODE" [disabled]="disabled_EMPCODE" [(ngModel)]="EMPCODE">
+    <label for="exampleInputEmail1">DOCNO</label>
+    <input type="text" class="form-control"  placeholder="Enter DOCNO" [disabled]="disabled_EMPCODE" [(ngModel)]="DOCNO">
   </div>
       <div class="form-group">
-    <label for="exampleInputEmail1">EMPDESC</label>
-    <input type="text" class="form-control" placeholder="Enter EMPDESC" [(ngModel)]="EMPDESC">
+    <label for="exampleInputEmail1">TO</label>
+    <input type="text" class="form-control" placeholder="Enter TO" [(ngModel)]="CONAME">
+  </div>
+
+      <div class="form-group">
+    <label for="exampleInputEmail1">ATTN</label>
+    <input type="text" class="form-control"   placeholder="Enter ATTN" [(ngModel)]="CTCNAME">
   </div>
       <div class="form-group">
-    <label for="exampleInputEmail1">CUSTCODE</label>
-    <input type="text" class="form-control"   placeholder="Enter CUSTCODE" [(ngModel)]="CUSTCODE">
+    <label for="exampleInputEmail1">DATE</label>
+    <input type="text" class="form-control" placeholder="Enter DATE" [(ngModel)]="DOCDATE">
+  </div>
+  
+   
+      <div class="form-group">
+    <label for="exampleInputEmail1">FROM :</label>
+    <input type="text" class="form-control"  placeholder="Enter FROM" [(ngModel)]="FROMNAME">
   </div>
       <div class="form-group">
-    <label for="exampleInputEmail1">VENDCODEs</label>
-    <input type="text" class="form-control" placeholder="Enter VENDCODEs" [(ngModel)]="VENDCODE">
+    <label for="exampleInputEmail1">TEL NUMBER:</label>
+    <input type="text" class="form-control"  placeholder="Enter TEL NUMBER" [(ngModel)]="TEL">
+  </div>
+   
+    
+      <div class="form-group">
+    <label for="exampleInputEmail1">CC :</label>
+    <input type="text" class="form-control"  placeholder="Enter CC" [(ngModel)]="CCNAME">
   </div>
       <div class="form-group">
-    <label for="exampleInputEmail1">POSITION</label>
-    <input type="text" class="form-control"  placeholder="Enter POSITION" [(ngModel)]="POSITION">
+    <label for="exampleInputEmail1">FAX NUMBER:</label>
+    <input type="text" class="form-control"  placeholder="Enter FAX NUMBE" [(ngModel)]="OPTION1">
   </div>
-      <div class="form-group">
-    <label for="exampleInputEmail1">CTCADR1</label>
-    <input type="text" class="form-control"  placeholder="Enter CTCADR1" [(ngModel)]="CTCADR1">
+    
+       <div class="form-group">
+    <label for="exampleInputEmail1">SHIPPER</label>
+    <input type="text" class="form-control"  placeholder="Enter SHIPPER" [(ngModel)]="SHIPPERNAME">
   </div>
-      <div class="form-group">
-    <label for="exampleInputEmail1">CTCADR2</label>
-    <input type="text" class="form-control"  placeholder="Enter CTCADR2" [(ngModel)]="CTCADR2">
+         <div class="form-group ">
+    <label for="exampleInputEmail1">QUANTITIES</label>
+    <input type="text" class="form-control"  placeholder="Enter QUANTITIES" [(ngModel)]="CBM">
   </div>
-      <div class="form-group">
-    <label for="exampleInputEmail1">EMAIL</label>
-    <input type="text" class="form-control"  placeholder="Enter EMAIL" [(ngModel)]="EMAIL">
+         <div class="form-group ">
+    <label for="exampleInputEmail1">FEEDER</label>
+    <input type="text" class="form-control"  placeholder="Enter FEEDER" [(ngModel)]="FEEDER">
+  </div>
+         <div class="form-group ">
+    <label for="exampleInputEmail1">VESSEL</label>
+    <input type="text" class="form-control"  placeholder="Enter VESSEL" [(ngModel)]="VESSEL">
+  </div>
+         <div class="form-group ">
+    <label for="exampleInputEmail1">DESTINATION</label>
+    <input type="text" class="form-control"  placeholder="Enter DESTINATION" [(ngModel)]="PORTNAME">
+  </div>
+  
+         <div class="form-group">
+    <label for="exampleInputEmail1">ETD</label>
+    <input type="text" class="form-control"  placeholder="Enter ETD" [(ngModel)]="ETD">
+  </div>
+         <div class="form-group">
+    <label for="exampleInputEmail1">DEST ETA</label>
+    <input type="text" class="form-control"  placeholder="Enter DEST ETA" [(ngModel)]="ETA">
+  </div>
+  
+         <div class="form-group">
+    <label for="exampleInputEmail1">CFS DATE</label>
+    <input type="text" class="form-control"  placeholder="Enter CFS DATE" [(ngModel)]="CFSDATE">
+  </div>
+         <div class="form-group">
+    <label for="exampleInputEmail1">LAST LOAD</label>
+    <input type="text" class="form-control"  placeholder="Enter LAST LOAD" [(ngModel)]="RETURNDATE">
+  </div>
+  
+  
+         <div class="form-group">
+    <label for="exampleInputEmail1">AT BEFORE</label>
+    <input type="text" class="form-control"  placeholder="Enter AT BEFORE" [(ngModel)]="LOADTIME">
+  </div>
+         <div class="form-group">
+    <label for="exampleInputEmail1">CFS AT/CTC</label>
+    <input type="text" class="form-control"  placeholder="Enter CFS AT/CTC" [(ngModel)]="EMAIL">
+  </div>
+ 
+ 
+         <div class="form-group">
+    <label for="exampleInputEmail1">BOOKING</label>
+    <input type="text" class="form-control"  placeholder="Enter BOOKING" [(ngModel)]="EMAIL">
+  </div>
+         <div class="form-group">
+    <label for="exampleInputEmail1">ORDER NO</label>
+    <input type="text" class="form-control"  placeholder="Enter ORDER NO" [(ngModel)]="EMAIL">
+  </div>
+ 
+  
+         <div class="form-group">
+    <label for="exampleInputEmail1">PORT OF LOADING</label>
+    <input type="text" class="form-control"  placeholder="Enter PORT OF LOADING" [(ngModel)]="EMAIL">
+  </div>
+         <div class="form-group">
+    <label for="exampleInputEmail1">FREIGHT PAYABLE</label>
+    <input type="text" class="form-control"  placeholder="Enter FREIGHT PAYABLE" [(ngModel)]="EMAIL">
+  </div>
+  
+         <div class="form-group">
+    <label for="exampleInputEmail1">SHIPPING LINE</label>
+    <input type="text" class="form-control"  placeholder="Enter SHIPPING LINE" [(ngModel)]="EMAIL">
+  </div>
+         <div class="form-group">
+    <label for="exampleInputEmail1">REMARK</label>
+    <input type="text" class="form-control"  placeholder="Enter REMARK" [(ngModel)]="EMAIL">
   </div>
   </div>
   <div class="modal-footer">  

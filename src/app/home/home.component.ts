@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
    ngbalerttext: string;
    mode: string
   title: string
+  DOCNO:string
   EMPCODE: string
   EMPDESC: string
   CUSTCODE: string
@@ -63,10 +64,18 @@ this._success.subscribe((message) => this.ngbalerttext = message);
   }
 
   }
-  getonlinedata(EMPCODE, PageNumber, RowspPage) {
-           let url = 'http://www.072serv.com/etracking/index.php/wepapp/test2';
-            let data = {EMPCODE: EMPCODE, PageNumber: PageNumber, RowspPage: RowspPage};
-          return  this.httpserviceService.post(url, data).then((data) => {
+  getonlinedata(DOCNO, PageNumber, RowspPage) {
+           let url = 'http://www.072serv.com/etracking/index.php/webapp2/search_data';
+            let data = {
+              data:{
+                DOCNO: DOCNO
+              },
+              PageNumber: PageNumber,
+              RowspPage: RowspPage,
+              table:'SFBOOK',
+              ORDERBY:'DOCNO'
+            };
+          return  this.httpserviceService.newpost(url, data).then((data) => {
                 // console.log(data);
                 this.totalrows = data['totalrows'];
                 this.items  = data['data'];
@@ -92,7 +101,7 @@ window.open (res[0]['webViewLink'], "_blank","status=1,toolbar=1");
 
   }
   delclick(item){
-      this.delete_EMPCODE(item.EMPCODE).then((res)=>{
+      this.delete_EMPCODE(item.DOCNO).then((res)=>{
     let val = this.searchbarinput;
         if (val && val.trim() != '') {
 
@@ -114,9 +123,13 @@ this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
   }
     delete_EMPCODE(EMPCODE) {
 
-    const endpoint = 'http://www.072serv.com/etracking/index.php/wepapp/delete_EMPCODE/';
-    let data = { text: EMPCODE }
-   return  this.httpserviceService.post(endpoint, data).then((data) => {
+    const endpoint = 'http://www.072serv.com/etracking/index.php/webapp2/delete_data/';
+    let data = { 
+      table: 'SFBOOK',
+      key:'DOCNO',
+      value:EMPCODE
+   }
+   return  this.httpserviceService.newpost(endpoint, data).then((data) => {
                 // console.log(data);
                  return data;
             });
@@ -124,7 +137,8 @@ this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
   }
   insert(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL, GROUPID) {
     //alert(text)
-    const endpoint = 'http://www.072serv.com/etracking/index.php/wepapp/insert/';
+    const endpoint = 'http://www.072serv.com/etracking/index.php/webapp2/insert_data/';
+    // +-----------------------------------------
     let data = {
       EMPCODE: EMPCODE,
       EMPDESC: EMPDESC,
@@ -136,14 +150,16 @@ this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
       EMAIL: EMAIL,
       GROUPID: GROUPID
     }
-       return  this.httpserviceService.post(endpoint, data).then((data) => {
+    // +-----------------------------------------
+       return  this.httpserviceService.newpost(endpoint, data).then((data) => {
                 // console.log(data);
                  return data;
             });
   }
   edit(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL, GROUPID) {
     //alert(text)
-    const endpoint = 'http://www.072serv.com/etracking/index.php/wepapp/edit/';
+    const endpoint = 'http://www.072serv.com/etracking/index.php/webapp2/edit_data/';
+    // +-----------------------------------------
     let data = {
       EMPCODE: EMPCODE,
       EMPDESC: EMPDESC,
@@ -155,16 +171,22 @@ this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
       EMAIL: EMAIL,
       GROUPID: GROUPID
     }
-       return  this.httpserviceService.post(endpoint, data).then((data) => {
+    // +-----------------------------------------
+       return  this.httpserviceService.newpost(endpoint, data).then((data) => {
                 // console.log(data);
                  return data;
             });
   }
-    get_detials(EMPCODE) {
+    get_detials(value) {
     //alert(text)
-    const endpoint = 'http://www.072serv.com/etracking/index.php/wepapp/get_EMPCODE_detial/';
-    let data = { EMPCODE: EMPCODE }
-    return  this.httpserviceService.post(endpoint, data).then((data) => {
+    const endpoint = 'http://www.072serv.com/etracking/index.php/webapp2/get_detial/';
+ 
+    let data = {
+       key:'DOCNO',
+       value: value,
+       table:'SFBOOK'
+       }
+    return  this.httpserviceService.newpost(endpoint, data).then((data) => {
                 // console.log(data);
                 return data;
             });

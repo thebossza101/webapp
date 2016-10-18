@@ -24,4 +24,18 @@ post(url: string, data) {
    });
 
 }
+newpost(url: string, data) {
+   return new Promise((resolve, reject) => {
+            let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' });
+    
+        this.http.post(url, JSON.stringify(data), { headers: headers }).map(res => res.json()).subscribe(data => {
+            resolve(data);
+          }, (er) => {
+            reject('er - > postdata');
+          });
+
+
+   });
+
+}
 }
