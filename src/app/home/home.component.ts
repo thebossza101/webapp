@@ -20,8 +20,32 @@ import {Positioning} from '@ng-bootstrap/ng-bootstrap/util/positioning';
 export class HomeComponent implements OnInit {
 
    private _success = new Subject<string>();
+  inputfrom = {
+    DOCNO:'',
+    disabled_Key:false,
+    CONAME:'',
+    CTCNAME:'',
+    DOCDATE:'',
+    FROMNAME:'',
+    TEL:'',
+    CCNAME:'',
+    OPTION1:'',
+    SHIPPERNAME:'',
+    CBM:'',
+    FEEDER:'',
+    VESSEL:'',
+    PORTNAME:'',
+    ETD:'',
+    ETA:'',
+    CFSDATE:'',
+    RETURNDATE:'',
+    LOADTIME:'',
 
-  constructor(public httpserviceService: HttpserviceService,public googleService: GoogleService,private modalService:NgbModal, public activeModal: NgbActiveModal) {}
+
+  }
+    selectfrom:any;
+  constructor(public httpserviceService: HttpserviceService,public googleService: GoogleService,private modalService:NgbModal, public activeModal: NgbActiveModal) 
+  { }
   items: any;
   PageNumber = 1;
   totalrows = 0;
@@ -34,16 +58,8 @@ export class HomeComponent implements OnInit {
    mode: string
   title: string
   DOCNO:string
-  EMPCODE: string
-  EMPDESC: string
-  CUSTCODE: string
-  VENDCODE: string
-  POSITION: string
-  CTCADR1: string
-  CTCADR2: string
-  EMAIL: string
-  GROUPID:string
-  disabled_EMPCODE:boolean;
+  isClassVisible:any
+
   ngOnInit() {
 this._success.subscribe((message) => this.ngbalerttext = message);
    this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
@@ -79,6 +95,8 @@ this._success.subscribe((message) => this.ngbalerttext = message);
                 // console.log(data);
                 this.totalrows = data['totalrows'];
                 this.items  = data['data'];
+                this.isClassVisible = data['data'][0].DOCNO;
+                this.selectfrom = data['data'][0];
                 return data;
             });
   }
@@ -100,9 +118,32 @@ window.open (res[0]['webViewLink'], "_blank","status=1,toolbar=1");
 
 
   }
-  delclick(item){
-      this.delete_EMPCODE(item.DOCNO).then((res)=>{
+  delclick(){
+
+      this.delete_EMPCODE(this.selectfrom.DOCNO).then((res)=>{
+          this.inputfrom.DOCNO='';
+     this.inputfrom.disabled_Key=false;
+     this.inputfrom.CONAME='';
+     this.inputfrom.CTCNAME='';
+     this.inputfrom.DOCDATE='';
+     this.inputfrom.FROMNAME='';
+     this.inputfrom.TEL='';
+     this.inputfrom.CCNAME='';
+     this.inputfrom.OPTION1='';
+     this.inputfrom.SHIPPERNAME='';
+     this.inputfrom.CBM='';
+     this.inputfrom.FEEDER='';
+     this.inputfrom.VESSEL='';
+     this.inputfrom.PORTNAME='';
+     this.inputfrom.ETD='';
+     this.inputfrom.ETA='';
+     this.inputfrom.CFSDATE='';
+     this.inputfrom.RETURNDATE='';
+     this.inputfrom.LOADTIME='';
+        this.ngbalerttext = null
     let val = this.searchbarinput;
+    
+
         if (val && val.trim() != '') {
 
 this.getonlinedata(this.searchbarinput, this.PageNumber, this.RowspPage)
@@ -135,44 +176,32 @@ this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
             });
 
   }
-  insert(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL, GROUPID) {
+  insert(data) {
     //alert(text)
     const endpoint = 'http://www.072serv.com/etracking/index.php/webapp2/insert_data/';
     // +-----------------------------------------
-    let data = {
-      EMPCODE: EMPCODE,
-      EMPDESC: EMPDESC,
-      CUSTCODE: CUSTCODE,
-      VENDCODE: VENDCODE,
-      POSITION: POSITION,
-      CTCADR1: CTCADR1,
-      CTCADR2: CTCADR2,
-      EMAIL: EMAIL,
-      GROUPID: GROUPID
-    }
     // +-----------------------------------------
-       return  this.httpserviceService.newpost(endpoint, data).then((data) => {
+     let data2 = { 
+      table: 'SFBOOK', 
+      data:data
+   }
+       return  this.httpserviceService.newpost(endpoint, data2).then((data) => {
                 // console.log(data);
                  return data;
             });
   }
-  edit(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL, GROUPID) {
+  edit(data) {
     //alert(text)
     const endpoint = 'http://www.072serv.com/etracking/index.php/webapp2/edit_data/';
     // +-----------------------------------------
-    let data = {
-      EMPCODE: EMPCODE,
-      EMPDESC: EMPDESC,
-      CUSTCODE: CUSTCODE,
-      VENDCODE: VENDCODE,
-      POSITION: POSITION,
-      CTCADR1: CTCADR1,
-      CTCADR2: CTCADR2,
-      EMAIL: EMAIL,
-      GROUPID: GROUPID
-    }
+    let data2 = { 
+      table: 'SFBOOK',
+      key:'DOCNO',
+      value:data.DOCNO,
+      data:data
+   }
     // +-----------------------------------------
-       return  this.httpserviceService.newpost(endpoint, data).then((data) => {
+       return  this.httpserviceService.newpost(endpoint, data2).then((data) => {
                 // console.log(data);
                  return data;
             });
@@ -191,48 +220,53 @@ this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
                 return data;
             });
   }
-  add_data(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL) {
-        this.get_detials(EMPCODE).then(data=>{
+  add_data(data) {
+        this.get_detials(data.DOCNO).then(res=>{
           
-        if(Object.keys(data).length > 0){
+        if(Object.keys(res).length > 0){
           
           this._success.next(`EMPCODE ถูกใช้งานแล้ว`);
         }else{
           var GROUPID = "";
-          this.insert(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL, GROUPID).then(data=>{
+          this.insert(data).then(res2=>{
             var msg = 'Add Successful';
              this._success.next(`Add Successful`);
-            this.searchbarinput = EMPCODE;
+            this.searchbarinput = data.DOCNO;
             this.PageNumber = 1;
-            this.getonlinedata(this.searchbarinput, this.PageNumber, this.RowspPage)
-            this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
-     this.initializeData  = data['data'];
-     this.initializetotalrows = data['totalrows'];
+            this.getonlinedata('', this.PageNumber, this.RowspPage).then((res3) => {
+     this.initializeData  = res3['data'];
+     this.initializetotalrows = res3['totalrows'];
+       this.getonlinedata(this.searchbarinput, this.PageNumber, this.RowspPage)
    });
-
+      
           },(er)=>{console.log(er)});
         }
       },(er)=>{console.log(er)})
 
   }
-  edit_data(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL){
+  edit_data(data){
 
       var GROUPID = "";
-      this.edit(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL, GROUPID).then(data=>{
+      this.edit(data).then(res=>{
         var msg = 'Edit Successful';
         this._success.next(`Edit Successful`);
         let val = this.searchbarinput;
         if (val && val.trim() != '') {
-
-this.getonlinedata(this.searchbarinput, this.PageNumber, this.RowspPage)
-this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
-     this.initializeData  = data['data'];
-     this.initializetotalrows = data['totalrows'];
+this.getonlinedata('', this.PageNumber, this.RowspPage).then((res2) => {
+     this.initializeData  = res2['data'];
+     this.initializetotalrows = res2['totalrows'];
+       this.getonlinedata(this.searchbarinput, this.PageNumber, this.RowspPage).then((res4)=>{
+     this.isClassVisible = data.DOCNO;
+    this.selectfrom = data;
+   })
    });
+ 
         }else{
-this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
-     this.initializeData  = data['data'];
-     this.initializetotalrows = data['totalrows'];
+this.getonlinedata('', this.PageNumber, this.RowspPage).then((res3) => {
+     this.initializeData  = res3['data'];
+     this.initializetotalrows = res3['totalrows'];
+     this.isClassVisible = data.DOCNO;
+    this.selectfrom = data;
    });
         }
 
@@ -242,37 +276,59 @@ this.getonlinedata('', this.PageNumber, this.RowspPage).then((data) => {
 
   }
   
-   open(content,mode,item) {
+   open(content,mode) {
      this.mode = mode;
      if(mode == 'A'){
-this.EMPCODE = "";
- this.EMPDESC = "";
-  this.CUSTCODE = "";
-   this.VENDCODE = "";
-    this.POSITION = "";
-     this.CTCADR1 = "";
-      this.CTCADR2 = "";
-       this.EMAIL = "";
-        this.GROUPID = "";
+   this.inputfrom.DOCNO='';
+     this.inputfrom.disabled_Key=false;
+     this.inputfrom.CONAME='';
+     this.inputfrom.CTCNAME='';
+     this.inputfrom.DOCDATE='';
+     this.inputfrom.FROMNAME='';
+     this.inputfrom.TEL='';
+     this.inputfrom.CCNAME='';
+     this.inputfrom.OPTION1='';
+     this.inputfrom.SHIPPERNAME='';
+     this.inputfrom.CBM='';
+     this.inputfrom.FEEDER='';
+     this.inputfrom.VESSEL='';
+     this.inputfrom.PORTNAME='';
+     this.inputfrom.ETD='';
+     this.inputfrom.ETA='';
+     this.inputfrom.CFSDATE='';
+     this.inputfrom.RETURNDATE='';
+     this.inputfrom.LOADTIME='';
         this.ngbalerttext = null
-        this.disabled_EMPCODE = false;
+      
      }else{
-       this.EMPCODE = item.EMPCODE;
- this.EMPDESC = item.EMPDESC;
-  this.CUSTCODE = item.CUSTCODE ;
-   this.VENDCODE = item.VENDCODE ;
-    this.POSITION = item.POSITION ;
-     this.CTCADR1 = item.CTCADR1 ;
-      this.CTCADR2 = item.CTCADR2 ;
-       this.EMAIL = item.EMAIL ;
-        this.GROUPID = item.GROUPID ;
-        this.ngbalerttext = null
-        this.disabled_EMPCODE = true;
+       this.inputfrom.disabled_Key=true;
+       
+     this.inputfrom.DOCNO=this.selectfrom.DOCNO;
+     this.inputfrom.CONAME=this.selectfrom.CONAME;
+     this.inputfrom.CTCNAME=this.selectfrom.CTCNAME;
+     this.inputfrom.DOCDATE=this.selectfrom.DOCDATE;
+     this.inputfrom.FROMNAME=this.selectfrom.FROMNAME;
+     this.inputfrom.TEL=this.selectfrom.TEL;
+     this.inputfrom.CCNAME=this.selectfrom.CCNAME;
+     this.inputfrom.OPTION1=this.selectfrom.OPTION1;
+     this.inputfrom.SHIPPERNAME=this.selectfrom.SHIPPERNAME;
+     this.inputfrom.CBM=this.selectfrom.CBM;
+     this.inputfrom.FEEDER=this.selectfrom.FEEDER;
+     this.inputfrom.VESSEL=this.selectfrom.VESSEL;
+     this.inputfrom.PORTNAME=this.selectfrom.PORTNAME;
+     this.inputfrom.ETD=this.selectfrom.ETD;
+     this.inputfrom.ETA=this.selectfrom.ETA;
+     this.inputfrom.CFSDATE=this.selectfrom.CFSDATE;
+     this.inputfrom.RETURNDATE=this.selectfrom.RETURNDATE;
+     this.inputfrom.LOADTIME=this.selectfrom.LOADTIME;
+     this.ngbalerttext = null
      }
     this.modalService.open(content).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
+      //console.log( this.closeResult);
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      //console.log( this.closeResult);
     });
   }
 private getDismissReason(reason: any): string {
@@ -285,44 +341,47 @@ private getDismissReason(reason: any): string {
     }
   }
   
-Saveclick(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL) {
-    if (!EMPCODE) {
-   this._success.next(`โปรดใส่ EMPCODE`);
+Saveclick() {
+    if (!this.inputfrom.DOCNO) {
+   this._success.next(`โปรดใส่ DOCNO`);
       return
     }
-    if (!EMPDESC) {
-      EMPDESC = "";
-    }
-    if (!CUSTCODE) {
-      CUSTCODE = "";
-    }
-    if (!VENDCODE) {
-      VENDCODE = "";
-    }
-    if (!POSITION) {
-      POSITION = "";
-    }
-    if (!CTCADR1) {
-      CTCADR1 = "";
-    }
-    if (!POSITION) {
-      POSITION = "";
-    }
-    if (!EMAIL) {
-      EMAIL = "";
-    }
-    if (!CTCADR2) {
-  this._success.next(`โปรดใส่ CTCADR2`);
-      return
-    }
+     let data = {
+    DOCNO:this.inputfrom.DOCNO,
+    CONAME:this.inputfrom.CONAME,
+    CTCNAME:this.inputfrom.CTCNAME,
+    DOCDATE:this.inputfrom.DOCDATE,
+    FROMNAME:this.inputfrom.FROMNAME,
+    TEL:this.inputfrom.TEL,
+    CCNAME:this.inputfrom.CCNAME,
+    OPTION1:this.inputfrom.OPTION1,
+    SHIPPERNAME:this.inputfrom.SHIPPERNAME,
+    CBM:this.inputfrom.CBM,
+    FEEDER:this.inputfrom.FEEDER,
+    VESSEL:this.inputfrom.VESSEL,
+    PORTNAME:this.inputfrom.PORTNAME,
+    ETD:this.inputfrom.ETD,
+    ETA:this.inputfrom.ETA,
+    CFSDATE:this.inputfrom.CFSDATE,
+    RETURNDATE:this.inputfrom.RETURNDATE,
+    LOADTIME:this.inputfrom.LOADTIME,
+      }
+    
     if (this.mode == 'A') {
-      this.add_data(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL);
+      this.add_data(data);
+
     }
     if (this.mode == 'E') {
-      this.edit_data(EMPCODE, EMPDESC, CUSTCODE, VENDCODE, POSITION, CTCADR1, CTCADR2, EMAIL);
+      this.edit_data(data);
     }
 
 
+  }
+  clicktr(item){
+this.isClassVisible = item.DOCNO;
+this.selectfrom = item;
+
+    
   }
 
 
