@@ -20,29 +20,7 @@ import {Positioning} from '@ng-bootstrap/ng-bootstrap/util/positioning';
 export class HomeComponent implements OnInit {
 
    private _success = new Subject<string>();
-  inputfrom = {
-    DOCNO:'',
-    disabled_Key:false,
-    CONAME:'',
-    CTCNAME:'',
-    DOCDATE:'',
-    FROMNAME:'',
-    TEL:'',
-    CCNAME:'',
-    OPTION1:'',
-    SHIPPERNAME:'',
-    CBM:'',
-    FEEDER:'',
-    VESSEL:'',
-    PORTNAME:'',
-    ETD:'',
-    ETA:'',
-    CFSDATE:'',
-    RETURNDATE:'',
-    LOADTIME:'',
-
-
-  }
+    inputfrom:any;
     selectfrom:any;
   constructor(public httpserviceService: HttpserviceService,public googleService: GoogleService,private modalService:NgbModal, public activeModal: NgbActiveModal) 
   { }
@@ -57,8 +35,8 @@ export class HomeComponent implements OnInit {
    ngbalerttext: string;
    mode: string
   title: string
-  DOCNO:string
-  isClassVisible:any
+  DOCNO: string
+  isClassVisible: any
 
   ngOnInit() {
 this._success.subscribe((message) => this.ngbalerttext = message);
@@ -301,12 +279,14 @@ this.getonlinedata('', this.PageNumber, this.RowspPage).then((res3) => {
         this.ngbalerttext = null
       
      }else{
+       this.inputfrom = new Object
        this.inputfrom.disabled_Key=true;
-       
+
+       //(date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear()
      this.inputfrom.DOCNO=this.selectfrom.DOCNO;
      this.inputfrom.CONAME=this.selectfrom.CONAME;
      this.inputfrom.CTCNAME=this.selectfrom.CTCNAME;
-     this.inputfrom.DOCDATE=this.selectfrom.DOCDATE;
+     this.inputfrom.DOCDATE = this.datetoobj(this.selectfrom.DOCDATE);
      this.inputfrom.FROMNAME=this.selectfrom.FROMNAME;
      this.inputfrom.TEL=this.selectfrom.TEL;
      this.inputfrom.CCNAME=this.selectfrom.CCNAME;
@@ -323,7 +303,7 @@ this.getonlinedata('', this.PageNumber, this.RowspPage).then((res3) => {
      this.inputfrom.LOADTIME=this.selectfrom.LOADTIME;
      this.ngbalerttext = null
      }
-    this.modalService.open(content).result.then((result) => {
+    this.modalService.open(content,{size:'lg'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
       //console.log( this.closeResult);
     }, (reason) => {
@@ -346,11 +326,13 @@ Saveclick() {
    this._success.next(`โปรดใส่ DOCNO`);
       return
     }
+//console.log(this.inputfrom.DOCDATE);
+let DOCDATE = this.inputfrom.DOCDATE['year']+"-"+this.inputfrom.DOCDATE['month']+"-"+this.inputfrom.DOCDATE['day']+" 00:00:00.000"
      let data = {
     DOCNO:this.inputfrom.DOCNO,
     CONAME:this.inputfrom.CONAME,
     CTCNAME:this.inputfrom.CTCNAME,
-    DOCDATE:this.inputfrom.DOCDATE,
+    DOCDATE:DOCDATE,
     FROMNAME:this.inputfrom.FROMNAME,
     TEL:this.inputfrom.TEL,
     CCNAME:this.inputfrom.CCNAME,
@@ -383,7 +365,21 @@ this.selectfrom = item;
 
     
   }
+  datetimeformat(date){
+let t =date.split(" ");
+let d = new Date(t[0]+ " " +t[1]+ " "+t[2])
+//console.log(d);
+return d;
 
+  }
+datetoobj(date){
+       let DOCDATE = this.datetimeformat(date);
+       return {
+         day: DOCDATE.getDate(),
+        month: DOCDATE.getMonth() + 1,
+        year: DOCDATE.getFullYear()
+}
+}
 
 
 }
