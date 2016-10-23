@@ -2,6 +2,7 @@ import { ModuleWithProviders }  from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
+import { SeaFreightRateCenterComponent } from './sea-freight-rate-center/sea-freight-rate-center.component';
 
 const appRoutes: Routes = [
     {
@@ -10,6 +11,7 @@ const appRoutes: Routes = [
   pathMatch: 'full'
 },
     { path: 'home', component: HomeComponent }, 
+    { path: 'SeaFreightRateCenter', component: SeaFreightRateCenterComponent }, 
 
 ];
 

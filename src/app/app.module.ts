@@ -13,13 +13,15 @@ import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './shared/header/header.component';
 import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConfirmModule} from 'angular2-bootstrap-confirm';
+import { SeaFreightRateCenterComponent } from './sea-freight-rate-center/sea-freight-rate-center.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    HeaderComponent
+    HeaderComponent,
+    SeaFreightRateCenterComponent
   ],
   imports: [
     BrowserModule,
